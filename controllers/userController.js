@@ -23,9 +23,8 @@ class UserController {
   }
   static async register(req, res, next) {
     try {
-      let { email, password } = req.body;
-      let createUser = await User.create({ email, password });
-      console.log(createUser);
+      let { email, password, username } = req.body;
+      let createUser = await User.create({ email, password, username });
       res.status(201).json(createUser);
     } catch (error) {
       next(error);
