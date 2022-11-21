@@ -28,7 +28,7 @@ class UserController {
       console.log(createUser);
       res.status(201).json(createUser);
     } catch (error) {
-      console.log(error);
+      next(error);
     }
   }
 }
