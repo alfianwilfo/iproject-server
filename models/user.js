@@ -14,9 +14,33 @@ module.exports = (sequelize, DataTypes) => {
   }
   User.init(
     {
-      username: DataTypes.STRING,
-      email: DataTypes.STRING,
-      password: DataTypes.STRING,
+      username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: { msg: "Username already registered" },
+        validate: {
+          notNull: { msg: "Username can't be null" },
+          notEmpty: { msg: "Username can't be empty" },
+        },
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: { msg: "Email already registered" },
+        validate: {
+          isEmail: { msg: "Invalid email format" },
+          notNull: { msg: "Email can't be null" },
+          notEmpty: { msg: "Email can't be empty" },
+        },
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: { msg: "Password can't be null" },
+          notEmpty: { msg: "Password can't be empty" },
+        },
+      },
       status: DataTypes.STRING,
     },
     {
@@ -26,6 +50,7 @@ module.exports = (sequelize, DataTypes) => {
   );
   User.beforeCreate(async (user) => {
     user.password = hash(user.password);
+    user.status = "Basic";
   });
   return User;
 };
