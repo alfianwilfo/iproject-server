@@ -4,6 +4,8 @@
   "description": "Individual Project - Server",
   "main": "index.js",
   "scripts": {
+    "dev": "NODE_ENV=development npx nodemon app.js",
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -26,5 +28,8 @@
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.8.0",
     "sequelize": "^6.25.6"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.5.2"
   }
 }
