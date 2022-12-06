@@ -1,5 +1,5 @@
 let { User } = require("../models/");
-var jwt = require("jsonwebtoken");
+let { createToken } = require("../helpers/jwt");
 
 class UserController {
   static async register(req, res, next) {
@@ -32,7 +32,7 @@ class UserController {
           email = false;
         } else {
           let payload = { id: findUserWithEmail.id };
-          var token = jwt.sign(payload, "shhhhh");
+          var token = createToken(payload);
           res.status(200).json({ access_token: token });
         }
       }
@@ -44,10 +44,12 @@ class UserController {
           throw { name: "BAD_REQUEST" };
         } else {
           let payload = { id: findUserWithUsername.id };
-          var token = jwt.sign(payload, "shhhhh");
+          var token = createToken(payload);
           res.status(200).json({ access_token: token });
         }
       }
+      var token = createToken(payload);
+      res.status(200).json({ access_token: token });
     } catch (error) {
       next(error);
     }
