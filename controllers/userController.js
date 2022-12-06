@@ -1,44 +1,53 @@
-let { User } = require("../models/index");
-let { comparePassword } = require("../helpers/bcrypt");
-let { createToken } = require("../helpers/jwt");
-const { use } = require("../routes");
-const { query } = require("express");
-class UserController {
-  static async login(req, res, next) {
-    try {
-      let { email, username, password } = req.body;
-      let query;
-      if (email) {
-        query = { where: { email: email } };
-      } else if (username) {
-        query = { where: { username: username } };
-      } else if (!email || !username) {
-        throw { name: "BAD_REQUEST" };
-      }
+let { User } = require("../models/");
+var jwt = require("jsonwebtoken");
 
-      let findUser = await User.findOne(query);
-      console.log(findUser, "?????");
-      if (!findUser) {
-        throw { name: "USER_NOT_FOUND" };
-      }
-      let pw = await comparePassword(password, findUser.password);
-      console.log(pw, "====");
-      if (!pw) {
-        throw { name: "PASSWORD_WRONG" };
-      }
-      let payload = { id: findUser.id };
-      let token = createToken(payload);
-      console.log(token);
+class UserController {
+  static async register(req, res, next) {
+    try {
+      let { username, email, password, status } = req.body;
+      let createdUser = await User.create({
+        username,
+        email,
+        password,
+        status,
+      });
+      res.status(201).json({
+        id: createdUser.id,
+        email: createdUser.email,
+        username: createdUser.username,
+      });
     } catch (error) {
-      console.log(error, "<<<");
       next(error);
     }
   }
-  static async register(req, res, next) {
+  static async login(req, res, next) {
     try {
-      let { email, password, username } = req.body;
-      let createUser = await User.create({ email, password, username });
-      res.status(201).json(createUser);
+      let { unameOrEmail, password } = req.body;
+      let email = true;
+      if (email) {
+        let findUserWithEmail = await User.findOne({
+          where: { email: unameOrEmail },
+        });
+        if (!findUserWithEmail) {
+          email = false;
+        } else {
+          let payload = { id: findUserWithEmail.id };
+          var token = jwt.sign(payload, "shhhhh");
+          res.status(200).json({ access_token: token });
+        }
+      }
+      if (!email) {
+        let findUserWithUsername = await User.findOne({
+          where: { username: unameOrEmail },
+        });
+        if (!findUserWithUsername) {
+          throw { name: "BAD_REQUEST" };
+        } else {
+          let payload = { id: findUserWithUsername.id };
+          var token = jwt.sign(payload, "shhhhh");
+          res.status(200).json({ access_token: token });
+        }
+      }
     } catch (error) {
       next(error);
     }

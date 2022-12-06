@@ -17,28 +17,28 @@ module.exports = (sequelize, DataTypes) => {
       username: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: { message: "Can't use this username" },
+        unique: { msg: "Username already registered" },
         validate: {
-          notNull: { message: "Username can't be null" },
-          notEmpty: { message: "Username can't be empty" },
+          notNull: { msg: "Username can't be null" },
+          notEmpty: { msg: "Username can't be empty" },
         },
       },
       email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: { message: "Can't use this email" },
+        unique: { msg: "Email already registered" },
         validate: {
-          isEmail: { message: "Invalid email format" },
-          notNull: { message: "Email can't be null" },
-          notEmpty: { message: "Email can't be empty" },
+          isEmail: { msg: "Invalid email format" },
+          notNull: { msg: "Email can't be null" },
+          notEmpty: { msg: "Email can't be empty" },
         },
       },
       password: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          notNull: { message: "Password can't be null" },
-          notEmpty: { message: "Password can't be empty" },
+          notNull: { msg: "Password can't be null" },
+          notEmpty: { msg: "Password can't be empty" },
         },
       },
       status: DataTypes.STRING,
