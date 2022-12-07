@@ -1,15 +1,17 @@
 let { User } = require("../models/");
 let { createToken } = require("../helpers/jwt");
 
+let { comparePassword } = require("../helpers/bcrypt");
+
 class UserController {
   static async register(req, res, next) {
     try {
-      let { username, email, password, status } = req.body;
+      console.log("masuk");
+      let { username, email, password } = req.body;
       let createdUser = await User.create({
         username,
         email,
         password,
-        status,
       });
       res.status(201).json({
         id: createdUser.id,
@@ -22,32 +24,21 @@ class UserController {
   }
   static async login(req, res, next) {
     try {
-      let { unameOrEmail, password } = req.body;
-      let email = true;
-      if (email) {
-        let findUserWithEmail = await User.findOne({
-          where: { email: unameOrEmail },
-        });
-        if (!findUserWithEmail) {
-          email = false;
-        } else {
-          let payload = { id: findUserWithEmail.id };
-          var token = createToken(payload);
-          res.status(200).json({ access_token: token });
-        }
+      let { email, password } = req.body;
+      let findUserWithEmail = await User.findOne({
+        where: { email: email },
+      });
+      if (!findUserWithEmail) {
+        throw { name: "WRONG_EMAIL" };
       }
-      if (!email) {
-        let findUserWithUsername = await User.findOne({
-          where: { username: unameOrEmail },
-        });
-        if (!findUserWithUsername) {
-          throw { name: "BAD_REQUEST" };
-        } else {
-          let payload = { id: findUserWithUsername.id };
-          var token = createToken(payload);
-          res.status(200).json({ access_token: token });
-        }
+      let comparePw = await comparePassword(
+        password,
+        findUserWithEmail.password
+      );
+      if (!comparePw) {
+        throw { name: "WRONG_PASSWORD" };
       }
+      let payload = { id: findUserWithEmail.id };
       var token = createToken(payload);
       res.status(200).json({ access_token: token });
     } catch (error) {

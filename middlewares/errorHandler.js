@@ -13,7 +13,7 @@ function errorHandler(err, req, res, next) {
     err.name === "WRONG_EMAIL" ||
     err.name === "WRONG_PASSWORD"
   ) {
-    res.status(401).json({ message: "Invalid Email or Username or Password" });
+    res.status(401).json({ message: "Invalid Email  or Password" });
   } else if (err.name === "DATA_NOT_FOUND") {
     res.status(404).json({ message: "DATA NOT FOUND" });
   } else if (err.name === "Forbidden") {
