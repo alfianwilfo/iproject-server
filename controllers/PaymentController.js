@@ -31,7 +31,6 @@ class PaymentController {
   }
   static async updateStatus(req, res, next) {
     try {
-      console.log(req.currentUser);
       let updatedUser = await User.update(
         { status: "Premium" },
         { where: { email: req.currentUser.email } }

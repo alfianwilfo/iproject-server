@@ -1,5 +1,7 @@
 function errorHandler(err, req, res, next) {
-  if (err.name === "SequelizeUniqueConstraintError") {
+  if (err.name === "BAD_REQ") {
+    res.status(403).json({ message: `Your Account Already Premium` });
+  } else if (err.name === "SequelizeUniqueConstraintError") {
     res.status(400).json({ message: err.errors[0].message });
   } else if (err.name === "SequelizeValidationError") {
     res.status(400).json({ message: err.errors[0].message });
