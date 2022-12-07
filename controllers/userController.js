@@ -1,24 +1,63 @@
 let { User } = require("../models/");
 let { createToken } = require("../helpers/jwt");
-
+let path = require("path");
 let { comparePassword } = require("../helpers/bcrypt");
+const nodemailer = require("nodemailer");
 
 class UserController {
   static async register(req, res, next) {
     try {
-      console.log("masuk");
+      let em = "litavue@gmail.com";
+      let pa = "test@123321";
+      let pwApp = "ltgeyizotxvapxkw";
+
       let { username, email, password } = req.body;
       let createdUser = await User.create({
         username,
         email,
         password,
       });
+      const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true, // use SSL
+        auth: {
+          user: em,
+          pass: pwApp,
+        },
+      });
+
+      var mailOptions = {
+        from: em,
+        to: email,
+        subject: "Welcome mate !",
+        html: `<h1>Welcome ${email}</h1>
+        <p>Akunmu sudah terdaftar dan bisa digunakan!</p>
+        <img src="cid:Nyan">`,
+        attachments: [
+          {
+            filename: "nyan cat dilelang.jpg",
+            path: path.join(__dirname, "../assets/nyan cat dilelang.jpg"),
+            cid: "Nyan", //my mistake was putting "cid:logo@cid" here!
+          },
+        ],
+      };
+
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log("Email sent: " + info.response);
+        }
+      });
+
       res.status(201).json({
         id: createdUser.id,
         email: createdUser.email,
         username: createdUser.username,
       });
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }
