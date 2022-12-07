@@ -79,7 +79,10 @@ class UserController {
       }
       let payload = { id: findUserWithEmail.id };
       var token = createToken(payload);
-      res.status(200).json({ access_token: token, email: email });
+      console.log(findUserWithEmail);
+      res
+        .status(200)
+        .json({ access_token: token, status: findUserWithEmail.status });
     } catch (error) {
       next(error);
     }
