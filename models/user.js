@@ -42,6 +42,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       status: DataTypes.STRING,
+      PaymentToken: DataTypes.STRING,
     },
     {
       sequelize,

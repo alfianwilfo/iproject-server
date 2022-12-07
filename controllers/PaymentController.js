@@ -1,4 +1,6 @@
 let axios = require("axios");
+const { where } = require("sequelize");
+let { User } = require("../models/");
 class PaymentController {
   static async getToken(req, res, next) {
     const randomId = Math.floor(Math.random() * 1000000000000);
@@ -20,6 +22,12 @@ class PaymentController {
       },
     };
     const { data } = await axios.post(midtransUrl, body, config);
+    console.log(req.currentUser.id);
+    console.log(data.token);
+    let fill = await User.update(
+      { PaymentToken: data.token },
+      { where: { id: req.currentUser.id } }
+    );
     res.status(200).json({ data });
     try {
     } catch (error) {
