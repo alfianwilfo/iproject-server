@@ -19,9 +19,11 @@ class CoronaVirus {
   }
   static async getStatistic(req, res, next) {
     try {
+      let { name } = req.query;
       let { data } = await axios({
         url: "https://covid-193.p.rapidapi.com/statistics",
         method: "GET",
+        params: { country: name },
         headers: {
           "X-RapidAPI-Key":
             "206048b294msh3f43529c347895ep13c30ajsn0d9f344e0ca0",
