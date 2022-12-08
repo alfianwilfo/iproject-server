@@ -8,7 +8,8 @@ List of Available Endpoints:
 - `GET /corona/countries`
 - `GET /corona/statistics
 - `GET /corona/history
-`
+- `GET /payments
+- `patch /payments
 
 ### POST /users/login
 
