@@ -3,9 +3,11 @@ const axios = require("axios");
 class CoronaVirus {
   static async getCountry(req, res, next) {
     try {
+      let { name } = req.query;
       let { data } = await axios({
         url: "https://covid-193.p.rapidapi.com/countries",
         method: "GET",
+        params: { search: name },
         headers: {
           "X-RapidAPI-Key":
             "206048b294msh3f43529c347895ep13c30ajsn0d9f344e0ca0",
